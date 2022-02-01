@@ -1,6 +1,5 @@
 from matplotlib.mathtext import MathTextParser
-from matplotlib.image import imsave
-from PIL import Image, ImageDraw
+from PIL import Image
 import numpy as np
 
 

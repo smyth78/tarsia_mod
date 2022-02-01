@@ -1,6 +1,5 @@
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
-import re
 
 from flask import send_file
 
