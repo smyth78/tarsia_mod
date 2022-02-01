@@ -66,7 +66,3 @@ def final_puzzle():
     except:
         print('error generating puzzle')
         return redirect("/", code=302)
-
-
-if __name__ == "__main__":
-    app.run(port=5000, host='0.0.0.0')
