@@ -65,7 +65,6 @@ class Puzzle:
             puzzle_squares.append(row_images)
         return puzzle_squares
 
-    @property
     def construct_puzzle_images(self):
         puzzle_length = self.puzzle_size * con.SIDE_LENGTH
         solution_image = Image.new('RGB', (puzzle_length, puzzle_length))
@@ -145,7 +144,7 @@ class ParseImages:
         return self.parsed_images
 
     def get_size_of_puzzle(self):
-        return int((1 + (1 + self.total) ** (1/2))  / 2)
+        return int((1 + (1 + self.total) ** (1/2)) / 2)
 
 
 def get_remaining_coord(remaining_coords):

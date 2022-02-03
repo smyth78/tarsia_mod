@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from flask import send_file
 
-import puzzle_files.render_formula as rend
+import puzzle_files.render_input as rend
 import puzzle_files.constants as con
 
 def generate_fields(num_questions):
@@ -34,14 +34,17 @@ def calculate_square_puzzle_question_count(size):
 
 
 def parse_form(form):
+    is_math_text = True if 'math-text' in form.keys() else False
     question_images = []
     answer_images = []
     for key in form:
-        image_string = "$" + form[key] + "$"
+        image_string = "$" + form[key] + "$" if is_math_text else form[key]
         if key[0] == 'q':
-            question_images.append(rend.RendMath(image_string).get_image())
+            question_images.append(rend.RendMath(image_string).get_image() if is_math_text else
+                                   rend.RendText(image_string).get_image())
         else:
-            answer_images.append(rend.RendMath(image_string).get_image())
+            answer_images.append(rend.RendMath(image_string).get_image() if is_math_text else
+                                 rend.RendText(image_string).get_image())
 
     return question_images, answer_images
 

@@ -9,4 +9,5 @@ IMAGE_FUDGE = 10
 SIDE_LENGTH = 300
 COMB_IM_FUDGE = 50
 
-text_test = ['alpha.png', 'alpha.png', 'alpha.png', 'alpha.png']
+FONT_URL = 'https://github.com/googlefonts/roboto/blob/main/src/hinted/Roboto-Light.ttf?raw=true'
+TEXT_SIZE = 20
