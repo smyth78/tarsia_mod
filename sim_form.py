@@ -1,0 +1,2 @@
+
+form = {'size': '2', 'qt1': 'qwed', 'qm1': '2x=10', 'at1': 'some', 'am1': 'x=5', 'qt2': 'qwed', 'qm2': 'qfewfd 1231', 'at2': 'wefw', 'am2': 'efwfe', 'qt3': 'qwed', 'qm3': 'wefwfe', 'at3': 'fwe', 'am3': 'wef', 'qt4': 'wc', 'qm4': 'we', 'at4': 'fwe', 'am4': 'fwe'}

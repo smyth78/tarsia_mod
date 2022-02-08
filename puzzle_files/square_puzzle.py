@@ -1,36 +1,27 @@
+# main library
 from PIL import Image, ImageDraw
-import helper_functions as hf
-import puzzle_files.constants as con
 import random
 
+# local imports
+import helper_functions as hf
+import puzzle_files.constants as con
+from puzzle_files.render_input import RenderJoinedTextImage as rjti
 
-class Square:
-    def __init__(self, coord):
+
+class PuzzlePiece:
+    def __init__(self, coord, num_sides):
         self.coord = coord
+        self.num_sides = num_sides
+        self.exterior_angle = int(360 / self.num_sides)
         self.side_length = con.SIDE_LENGTH
-        self.image = self.draw_square()
-
-    def draw_square(self):
-        vertices = [0, 0, self.side_length, self.side_length]
-
-        image = Image.new('RGBA', (self.side_length, self.side_length),
-                          (255, 255, 255, 0))
-        draw = ImageDraw.Draw(image)
-        draw.rectangle(vertices, fill=con.BACK_COLOUR, outline=con.LINE_COLOUR, width=con.LINE_WIDTH)
-        return image
+        self.image = None
 
     def insert_text_image(self, text_image, position):
         # need to rotate the image so the position is at top
-        self.image = self.image.rotate(position * 90)
-        text_w, text_h = text_image.size
-        aspect_ratio = text_h / text_w if text_w > text_h else text_w / text_h
-        resized_width = con.SIDE_LENGTH * con.TEXT_IMAGE_RESIZE_VERT if text_w > text_h else \
-            con.SIDE_LENGTH * con.TEXT_IMAGE_RESIZE_HORIZ
-        text_image = text_image.resize((int(resized_width), int(resized_width * aspect_ratio))) if text_w > text_h else \
-            text_image.resize((int(resized_width * aspect_ratio), int(resized_width)))
+        self.image = self.image.rotate(position * self.exterior_angle)
         self.stamp_text_image(text_image)
         # rotate image back to original position
-        self.image = self.image.rotate(position * (-90))
+        self.image = self.image.rotate(position * (-self.exterior_angle))
 
     def stamp_text_image(self, text_image):
         bg_w, bg_h = self.image.size
@@ -45,14 +36,70 @@ class Square:
         return self.coord
 
 
-class Puzzle:
+class Square(PuzzlePiece):
+    def __init__(self, coord):
+        self.num_sides = 4
+        super().__init__(coord, self.num_sides)
+        self.image = self.draw_square()
+
+    def draw_square(self):
+        vertices = [0, 0, self.side_length, self.side_length]
+
+        image = Image.new('RGBA', (self.side_length, self.side_length),
+                          (255, 255, 255, 0))
+        draw = ImageDraw.Draw(image)
+        draw.rectangle(vertices, fill=con.BACK_COLOUR, outline=con.LINE_COLOUR, width=con.LINE_WIDTH)
+        return image
+
+
+class AbstractPuzzle:
     def __init__(self, puzzle_size, text_images):
         self.text_images = text_images
         self.puzzle_size = puzzle_size
-        self.puzzle_squares = self.create_puzzle_squares()
+        self.solution_image = None
+        self.final_puzzle_image = None
+        # if is_square:
+        #
+        # elif is_triangle:
+        #     self.puzzle_pieces = self.create_puzzle_triangles()
+        #     self.coords_in_puzzle = self.create_triangle_coords_list()
+        #     self.num_of_questions = hf.calculate_triangle_puzzle_question_count(puzzle_size)
+
+    def create_puzzle_triangles(self):
+        return ''
+
+    def get_solution_image(self):
+        return self.solution_image
+
+    def get_final_puzzle_image(self):
+        return self.final_puzzle_image
+
+    def create_triangle_coords_list(self):
+        return ''
+
+
+class SquarePuzzle(AbstractPuzzle):
+    def __init__(self, puzzle_size, text_images):
+        super().__init__(puzzle_size, text_images)
+        self.puzzle_pieces = self.create_puzzle_squares()
         self.coords_in_puzzle = self.create_square_coords_list()
-        self.insert_text_images()
-        self.solution_image, self.final_puzzle_image = self.construct_puzzle_images
+        self.num_of_questions = hf.calculate_square_puzzle_problem_count(puzzle_size)
+        self.insert_text_images_square()
+        self.solution_image, self.final_puzzle_image = self.construct_puzzle_images()
+
+    def get_square_by_coord(self, coord):
+        for row in self.puzzle_pieces:
+            for square in row:
+                if square.get_coord() == coord:
+                    return square
+
+    def create_square_coords_list(self):
+        i, j = range(0, self.puzzle_size), range(0, self.puzzle_size)
+        coords_list = []
+        for x in i:
+            for y in j:
+                coords_list.append([x, y])
+        return coords_list
 
     def create_puzzle_squares(self):
         puzzle_squares = []
@@ -70,7 +117,7 @@ class Puzzle:
         solution_image = Image.new('RGB', (puzzle_length, puzzle_length))
         final_puzzle_image = Image.new('RGB', (puzzle_length, puzzle_length))
         random_coords_remaining = self.coords_in_puzzle
-        for i, puzzle_images_row in enumerate(self.puzzle_squares):
+        for i, puzzle_images_row in enumerate(self.puzzle_pieces):
             for j, square in enumerate(puzzle_images_row):
                 solution_image.paste(square.get_image(), (j * con.SIDE_LENGTH, i * con.SIDE_LENGTH))
                 a_random_coord, random_coords_remaining = get_remaining_coord(random_coords_remaining)
@@ -80,33 +127,11 @@ class Puzzle:
                                                                                                 con.SIDE_LENGTH))
         return solution_image, final_puzzle_image
 
-    def get_solution_image(self):
-        return self.solution_image
-
-    def get_final_puzzle_image(self):
-        return self.final_puzzle_image
-
-    def create_square_coords_list(self):
-        i, j = range(0, self.puzzle_size), range(0, self.puzzle_size)
-        coords_list = []
-        for x in i:
-            for y in j:
-                coords_list.append([x, y])
-        return coords_list
-
-    def get_square_by_coord(self, coord):
-        for row in self.puzzle_squares:
-            for square in row:
-                if square.get_coord() == coord:
-                    return square
-
-    def insert_text_images(self):
+    def insert_text_images_square(self):
         # vertical (green) lines
-        puzzle_size = self.puzzle_size
-        num_of_questions = hf.calculate_square_puzzle_question_count(puzzle_size)
         question_counter = 0
-        for i in range(puzzle_size):
-            for j in range(puzzle_size):
+        for i in range(self.puzzle_size):
+            for j in range(self.puzzle_size):
                 if j < self.puzzle_size - 1:
                     # square_1 is the left square of the pair so insert at 'R'
                     square_1 = self.get_square_by_coord((i, j))
@@ -126,10 +151,10 @@ class Puzzle:
 
 
 class ParseImages:
-    def __init__(self, question_images, answer_images):
-        self.total = len(question_images) + len(answer_images)
-        self.question_images = question_images
-        self.answer_images = answer_images
+    def __init__(self, size, q_text_images, q_math_images, a_text_images, a_math_images):
+        self.total = hf.calculate_square_puzzle_problem_count(size) * 2
+        self.question_images, self.answer_images = join_problem_strings_as_images(q_text_images,  q_math_images,
+                                                                                  a_text_images, a_math_images)
         self.parsed_images = []
         self.parse_images()
 
@@ -151,4 +176,30 @@ def get_remaining_coord(remaining_coords):
     random.shuffle(remaining_coords)
     chosen_coord = remaining_coords.pop()
     return chosen_coord, remaining_coords
+
+
+def join_problem_strings_as_images(qt, qm, at, am):
+    # # oragnise images into [[[qt1,qm1],[at1,am1]], [[qt2,qm2],[at2,am2]],...etc
+    collated_strings = []
+    for qtp, qmp, atp, amp in zip(qt, qm, at, am):
+        collated_strings.append([[qtp, qmp], [atp, amp]])
+
+    final_question_images = []
+    final_answer_images = []
+
+    for problem_strings in collated_strings:
+        question = problem_strings[0]
+        answer = problem_strings[1]
+        final_question_images.append(rjti(question[0], question[1]).get_joined_image())
+        final_answer_images.append(rjti(answer[0], answer[1]).get_joined_image())
+
+    return final_question_images, final_answer_images
+
+
+
+
+
+
+
+
 
