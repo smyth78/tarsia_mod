@@ -151,22 +151,27 @@ class SquarePuzzle(AbstractPuzzle):
 
 
 class ParseImages:
-    def __init__(self, size, q_text_images, q_math_images, a_text_images, a_math_images):
-        self.total = hf.calculate_square_puzzle_problem_count(size) * 2
+    def __init__(self, total_questions, q_text_images, q_math_images, a_text_images, a_math_images, is_random, is_treasure,
+                 text_size):
+        self.total = total_questions
         self.question_images, self.answer_images = join_problem_strings_as_images(q_text_images,  q_math_images,
-                                                                                  a_text_images, a_math_images)
+                                                                                  a_text_images, a_math_images,
+                                                                                  is_treasure, text_size)
         self.parsed_images = []
-        self.parse_images()
+        self.parse_images(is_random)
 
-    def parse_images(self):
+    def parse_images(self, is_random):
         for question_image, answer_image in zip(self.question_images, self.answer_images):
             paring = [question_image, answer_image]
-            random.shuffle(paring)
+            random.shuffle(paring) if is_random else None
             self.parsed_images.append(paring)
         random.shuffle(self.parsed_images)
 
     def get_parsed_images(self):
         return self.parsed_images
+
+    def get_quest_answer_images(self):
+        return self.question_images, self.answer_images
 
     def get_size_of_puzzle(self):
         return int((1 + (1 + self.total) ** (1/2)) / 2)
@@ -178,7 +183,7 @@ def get_remaining_coord(remaining_coords):
     return chosen_coord, remaining_coords
 
 
-def join_problem_strings_as_images(qt, qm, at, am):
+def join_problem_strings_as_images(qt, qm, at, am, is_treasure, text_size):
     # # oragnise images into [[[qt1,qm1],[at1,am1]], [[qt2,qm2],[at2,am2]],...etc
     collated_strings = []
     for qtp, qmp, atp, amp in zip(qt, qm, at, am):
@@ -190,8 +195,8 @@ def join_problem_strings_as_images(qt, qm, at, am):
     for problem_strings in collated_strings:
         question = problem_strings[0]
         answer = problem_strings[1]
-        final_question_images.append(rjti(question[0], question[1]).get_joined_image())
-        final_answer_images.append(rjti(answer[0], answer[1]).get_joined_image())
+        final_question_images.append(rjti(question[0], question[1], is_treasure, text_size).get_joined_image())
+        final_answer_images.append(rjti(answer[0], answer[1], is_treasure, text_size).get_joined_image())
 
     return final_question_images, final_answer_images
 

@@ -50,6 +50,9 @@ def generate_fields(num_questions):
 def calculate_square_puzzle_problem_count(size):
     return int((4 * size**2 - 4 * size) * (1/2))
 
+def calculate_square_size_from_question_total(questions):
+    return int((2 * questions + 1)**(1/2) / 2 + 1/2)
+
 def calculate_triangle_puzzle_question_count(size):
     return int(4)
 
@@ -62,13 +65,13 @@ def parse_form_content(form, is_norm_text, is_math_text):
     for key in form:
         # note each append has a 'placeholder' so later function works
         if key[0:2] == 'qt':
-            question_text_images.append(form[key] if is_norm_text else '')
+            question_text_images.append(form[key] if is_norm_text else None)
         elif key[0:2] == 'qm':
-            question_math_images.append(form[key] if is_math_text else '')
+            question_math_images.append(form[key] if is_math_text else None)
         elif key[0:2] == 'at':
-            answer_text_images.append(form[key] if is_norm_text else '')
+            answer_text_images.append(form[key] if is_norm_text else None)
         elif key[0:2] == 'am':
-            answer_math_images.append(form[key] if is_math_text else '')
+            answer_math_images.append(form[key] if is_math_text else None)
 
     return question_text_images, question_math_images, answer_text_images, answer_math_images
 
@@ -80,15 +83,15 @@ def serve_pil_image(pil_img):
     return send_file(img_io, mimetype='image/jpeg')
 
 
-def combine_puz_and_soln_images(soln_image, puzzle_image):
-    comb_w, comb_h = soln_image.size
+def combine_puz_and_soln_images(top_image, top_text, bottom_image, bottom_text):
+    comb_w, comb_h = top_image.size
     # make height larger to accomadate both images and some text
     full_height = comb_h * 2 + con.GAP_IN_FINAL_IMAGE * 2
     combined_image = Image.new('RGB', (comb_w, full_height), (255, 255, 255, 0))
     draw = ImageDraw.Draw(combined_image)
     font = ImageFont.truetype("puzzle_files/arial.ttf", 30)
-    draw.text((50, 10), "Solution", (0, 0, 0), font=font)
-    combined_image.paste(soln_image, (0, con.GAP_IN_FINAL_IMAGE))
-    draw.text((50, comb_h + con.GAP_IN_FINAL_IMAGE + 10), "Puzzle", (0, 0, 0), font=font)
-    combined_image.paste(puzzle_image, (0, comb_h + con.GAP_IN_FINAL_IMAGE * 2))
+    draw.text((50, 10), top_text, (0, 0, 0), font=font)
+    combined_image.paste(top_image, (0, con.GAP_IN_FINAL_IMAGE))
+    draw.text((50, comb_h + con.GAP_IN_FINAL_IMAGE + 10), bottom_text, (0, 0, 0), font=font)
+    combined_image.paste(bottom_image, (0, comb_h + con.GAP_IN_FINAL_IMAGE * 2))
     return combined_image

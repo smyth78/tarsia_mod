@@ -1,51 +1,78 @@
 {% extends 'base.html' %}
     {% block content %}
 <div class="container">
-<div class="row">
-    <div class="col-xs-12 col-sm-8 col-md-6">
-			<form action="/puzzle" method="POST" role="form">
-			<h2>Problem entry page...</h2>
-				<hr class="colorgraph">
-				<h5>Select output type...</h5>
-				<div>
-					<div class="form-group col-xs-12 col-sm-4 col-md-4" name='jigsaw-radio'>
-                        <label> Jigsaw </label>
-                        <input type="radio" name="options" id="tarsia" value="tarsia" checked>
-				</div>
-				<div class="form-group col-xs-12 col-sm-4 col-md-4" name='treasure-radio'>
-                        <label> Treasure hunt </label>
-                        <input type="radio" name="options" id="treasure" value="treasure">
-				</div>
-				<div class="form-group col-xs-12 col-sm-4 col-md-4" name='sheet-radio'>
-                        <label> Worksheet </label>
-                        <input type="radio" name="options" id="worksheet" value="worksheet">
-				</div>
-				</div>
-				<div class="hide-div"><input type='number' name="size"  id="size" value={{size}}></div>
-					<label>Include math tex?...</label><input type="checkbox" class="question" id="math-text" name="math-text" checked/><br>
-					<label>Include normal text?...</label><input type="checkbox" class="question" id="normal-text" name="normal-text" checked/>
-				<hr class="colorgraph">
-				<div class="row">
-                {% for field in fields %}
-				<div class="col-xs-12 col-sm-3 col-md-3">
-					<div class="form-group" name={{field["name"]}}>
-                        <label> {{ field["human_label"] }} </label>
-                        <input type={{field["type"]}} name={{field["name"]}}  id={{field["name"]}} class="form-control input-lg" tabindex={{loop.index}}>
+	<div class="row">
+		<div class="col">
+			<div class="col-xs-6 col-sm-6 col-md-6">
+				<form action="/puzzle" method="POST" role="form">
+				<h2>Puzzle maker...</h2>
+					<hr class="colorgraph">
+					<div class="row">
+						<h5 class="col-xs-12 col-sm-12 col-md-12">Select output type...</h5>
+						<div>
+							<div class="form-group col-xs-12 col-sm-4 col-md-4" name='jigsaw-radio'>
+								<label> Jigsaw </label>
+								<input type="radio" name="options" id="tarsia" value="tarsia" checked>
+						</div>
+						<div class="form-group col-xs-12 col-sm-4 col-md-4" name='treasure-radio'>
+								<label> Treasure hunt </label>
+								<input type="radio" name="options" id="treasure" value="treasure">
+						</div>
+						<div class="form-group col-xs-12 col-sm-4 col-md-4" name='sheet-radio'>
+								<label> Worksheet </label>
+								<input type="radio" name="options" id="worksheet" value="worksheet">
+						</div>
+						</div>
+						</div>
+					<hr class="colorgraph">
+					<div class="row">
+						<div class="hide-div"><input type='number' name="size"  id="size" value={{size}}></div>
+							<div class="col-xs-12 col-sm-4 col-md-4">
+								<div class="form-group" name="math-tex-title">
+									<label>Include math TeX?...</label><input type="checkbox" class="question" id="math-text" name="math-text" checked/>
+								</div>
+							</div>
+
+							<div class="col-xs-12 col-sm-4 col-md-4">
+								<div class="form-group" name="norm-tex-title">
+									<label>Include normal text?...</label><input type="checkbox" class="question" id="normal-text" name="normal-text" checked/>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-4 col-md-4">
+								<div class="form-group" name="text-size-title">
+									<label>Text size... </label>
+									<input type='number' name='text-size'  id='text-size' class="form-control input-lg" value="20">
+								</div>
+							</div>
 					</div>
+					<hr class="colorgraph">
+					<div class="row">
+					{% for field in fields %}
+					<div class="col-xs-12 col-sm-3 col-md-3">
+						<div class="form-group" name={{field["name"]}}>
+							<label> {{ field["human_label"] }} </label>
+							<input type={{field["type"]}} name={{field["name"]}}  id={{field["name"]}} class="form-control input-lg" tabindex={{loop.index}}>
+						</div>
+					</div>
+					{% endfor %}
 				</div>
-                {% endfor %}
+					<hr class="colorgraph">
+				<div class="row">
+					<div class="col-xs-12 col-md-6"><input type="submit" value="Submit" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
+				</div>
+			</form>
 			</div>
-			<hr class="colorgraph">
-			<div class="row">
-				<div class="col-xs-12 col-md-6"><input type="submit" value="Submit" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
-			</div>
-		</form>
+		</div>
+		<div class="col">
+			<div class="col-xs-6 col-sm-6 col-md-6">
+	 <label>Hide tips to enter mathematical symbols...</label><input type="checkbox" class="question" checked/>
+		<div class="answer">
+			<img src="{{url_for('static', filename='tips.jpg')}}" alt="Hipster"/>
+		</div>
+				<a href="https://kapeli.com/cheat_sheets/LaTeX_Math_Symbols.docset/Contents/Resources/Documents/index" target="_blank" class="link-primary">Math TeX reference...</a>
+	</div></div>
+		</div>
 	</div>
-<!--	 <label>Hide tips to enter mathematical symbols...</label><input type="checkbox" class="question" checked/>-->
-<!--		<div class="answer">-->
-<!--			<img src="{{url_for('static', filename='tips.jpg')}}" alt="Hipster"/>-->
-<!--		</div>-->
-</div>
 </div>
 
 {% endblock %}
