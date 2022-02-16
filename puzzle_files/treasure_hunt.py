@@ -18,6 +18,20 @@ class TreasureHunt:
     def get_answer_template(self):
         if self.number_of_clues == 4:
             answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_4.png')
+        elif self.number_of_clues == 16:
+            answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_16.png')
+        elif self.number_of_clues == 3:
+            answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_3.png')
+        elif self.number_of_clues == 18:
+            answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_18.png')
+        elif self.number_of_clues == 12:
+            answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_12.png')
+        elif self.number_of_clues == 24:
+            answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_24.png')
+        elif self.number_of_clues == 30:
+            answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_30.png')
+        elif self.number_of_clues == 40:
+            answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_40.png')
         else:
             answer_template = None
         return answer_template
@@ -34,10 +48,12 @@ class TreasureHunt:
             else:
                 answer = self.answer_images[0]
             current_clue = self.clue_template.copy()
-            resized_question = resize_image_aspect(question, 2)
-            current_clue.paste(answer, (89, 24))
-            offset = ((con.WIDTH_TREASURE_CLUE - resized_question.width) // 2, 155)
-            current_clue.paste(resized_question, offset)
+            if question is not None:
+                resized_question = resize_image_aspect(question, 2)
+                offset = ((con.WIDTH_TREASURE_CLUE - resized_question.width) // 2, 155)
+                current_clue.paste(resized_question, offset)
+            if answer is not None:
+                current_clue.paste(answer, (89, 24))
             clue_templates.append(current_clue)
         return clue_templates
 

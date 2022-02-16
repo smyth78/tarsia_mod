@@ -14,7 +14,8 @@ class RenderText:
     colour_outline = con.LINE_COLOUR
     colour_background = con.BACK_COLOUR
 
-    def __init__(self, text, is_math, is_treasure, text_size):
+    def __init__(self, text, is_math, is_treasure, text_size, side_length):
+        self.side_length = side_length
         self.font = {'size': text_size}
         plt.rc('font', **self.font)
         self.fontsize = text_size
@@ -52,7 +53,7 @@ class RenderText:
         width_1char, height_1char = self.font.getsize('A')
         # subtract 100 here for the 'blank space' on the TH clue card
         width_of_line_in_chars = (con.WIDTH_TREASURE_CLUE - 100) // width_1char if self.is_treasure else \
-            (con.SIDE_LENGTH * con.TEXT_OVERLAP_FACTOR) // width_1char
+            (self.side_length * con.TEXT_OVERLAP_FACTOR) // width_1char
         # split the text if mult lines
         lines = textwrap.wrap(self.text, width=width_of_line_in_chars)
         longest_line = max(lines, key=len)
@@ -76,18 +77,21 @@ class RenderText:
 class RenderJoinedTextImage:
     blank_image = Image.new('RGB', (0, 0))
 
-    def __init__(self, normal_text, math_text, is_treasure, text_size):
-        self.normal_text = RenderText(normal_text, False, is_treasure, text_size) if normal_text is not None else None
-        self.math_text = RenderText(r"${}$".format(math_text), True, is_treasure, text_size) if math_text is not None else None
+    def __init__(self, normal_text, math_text, is_treasure, text_size, side_length):
+        self.side_length = side_length
+        self.plain_normal_text = normal_text
+        self.plain_math_text = math_text
+        self.normal_text = RenderText(normal_text, False, is_treasure, text_size, side_length) if normal_text is not None else None
+        self.math_text = RenderText(r"${}$".format(math_text), True, is_treasure, text_size, side_length) if math_text is not None else None
         self.images = self.collect_problem_images()
         self.final_joined_image = self.join_images()
 
     def collect_problem_images(self):
         problem_images = []
-        if self.normal_text is not None:
+        if self.normal_text is not None and self.plain_normal_text != '':
             if self.normal_text.get_image() is not None:
                 problem_images.append(self.normal_text.get_image())
-        if self.math_text is not None:
+        if self.math_text is not None and self.plain_math_text != '':
             if self.math_text.get_image() is not None:
                 problem_images.append(self.math_text.get_image())
         return problem_images
@@ -108,8 +112,11 @@ class RenderJoinedTextImage:
                 problem_image.paste(self.images[0], offset)
                 problem_image.paste(self.images[1], (0, self.images[0].height + con.COMB_IM_FUDGE))
         # this is when only math OR normal textis used
-        else:
+        elif len(self.images) == 1:
             problem_image = self.images[0]
+        else:
+            # if the textbox is empty do nothing -MAYBE NEED CLIENT SIDE WARNING?
+            problem_image = None
 
         return problem_image
 

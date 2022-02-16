@@ -1,5 +1,6 @@
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
+import math
 
 from flask import send_file
 
@@ -9,10 +10,10 @@ import puzzle_files.constants as con
 def generate_fields(num_questions):
     form_fields = []
     for i in range(num_questions):
-        question_text_label = 'Q' + str(i + 1) + ' - text'
-        question_math_label = 'Q' + str(i + 1) + ' - math tex'
-        answer_text_label = 'A' + str(i + 1) + ' - text'
-        answer_math_label = 'A' + str(i + 1) + ' - math tex'
+        question_text_label = 'Q' + str(i + 1) + ' - Text'
+        question_math_label = 'Q' + str(i + 1) + ' - Math TeX'
+        answer_text_label = 'A' + str(i + 1) + ' - Text'
+        answer_math_label = 'A' + str(i + 1) + ' - Math Tex'
         question_text_name = 'qt' + str(i + 1)
         question_math_name = 'qm' + str(i + 1)
         answer_text_name = 'at' + str(i + 1)
@@ -47,11 +48,18 @@ def generate_fields(num_questions):
         form_fields.append(new_answer_math_tex)
     return form_fields
 
+
 def calculate_square_puzzle_problem_count(size):
     return int((4 * size**2 - 4 * size) * (1/2))
 
+
 def calculate_square_size_from_question_total(questions):
     return int((2 * questions + 1)**(1/2) / 2 + 1/2)
+
+
+def calculate_tri_size_from_question_total(questions):
+    return int(0.5 + (math.sqrt(8 * questions + 3) / (2 * math.sqrt(3))))
+
 
 def calculate_triangle_puzzle_question_count(size):
     return int(4)
@@ -82,7 +90,7 @@ def serve_pil_image(pil_img):
     img_io.seek(0)
     return send_file(img_io, mimetype='image/jpeg')
 
-
+# this function is repeated as it is used by the puzzles and also by the trasure hunt!
 def combine_puz_and_soln_images(top_image, top_text, bottom_image, bottom_text):
     comb_w, comb_h = top_image.size
     # make height larger to accomadate both images and some text

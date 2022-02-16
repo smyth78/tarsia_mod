@@ -6,42 +6,61 @@
 			<div class="col-xs-6 col-sm-6 col-md-6">
 				<form action="/puzzle" method="POST" role="form">
 				<h2>Puzzle maker...</h2>
+					<a href="/" class="link-primary">Back to number of questions...</a>
 					<hr class="colorgraph">
 					<div class="row">
 						<h5 class="col-xs-12 col-sm-12 col-md-12">Select output type...</h5>
 						<div>
-							<div class="form-group col-xs-12 col-sm-4 col-md-4" name='jigsaw-radio'>
+							<div class="col-xs-12 col-sm-4 col-md-4">
 								<label> Jigsaw </label>
-								<input type="radio" name="options" id="tarsia" value="tarsia" checked>
+								<input type="radio" name="options-puzzle" id="tarsia" value="tarsia" checked>
+<!--								<hr>-->
+<!--								<div id="jig-shape-div" style="visibility:hidden;">-->
+<!--									<div class="row col-xs-12 col-sm-12 col-md-12" style="visibility:hidden;" id="jigsaw-shape-square-div">-->
+<!--										<label> Square </label>-->
+<!--										<input type="radio" name="jigsaw-shape" id="jigsaw-shape-square" value="jigsaw-square">-->
+<!--									</div>-->
+<!--									<div class="row col-xs-12 col-sm-12 col-md-12" style="visibility:hidden;" id="jigsaw-shape-tri-div">-->
+<!--										<label> Triangle </label>-->
+<!--										<input type="radio" name="jigsaw-shape" id="jigsaw-shape-tri" value="jigsaw-tri">-->
+<!--									</div>-->
+<!--								</div>-->
 						</div>
-						<div class="form-group col-xs-12 col-sm-4 col-md-4" name='treasure-radio'>
+						<div class="col-xs-12 col-sm-4 col-md-4">
 								<label> Treasure hunt </label>
-								<input type="radio" name="options" id="treasure" value="treasure">
+								<input type="radio" name="options-puzzle" id="treasure" value="treasure">
 						</div>
-						<div class="form-group col-xs-12 col-sm-4 col-md-4" name='sheet-radio'>
+						<div class="col-xs-12 col-sm-4 col-md-4">
 								<label> Worksheet </label>
-								<input type="radio" name="options" id="worksheet" value="worksheet">
+								<input type="radio" name="options-puzzle" id="worksheet" value="worksheet">
 						</div>
 						</div>
 						</div>
 					<hr class="colorgraph">
 					<div class="row">
 						<div class="hide-div"><input type='number' name="size"  id="size" value={{size}}></div>
-							<div class="col-xs-12 col-sm-4 col-md-4">
-								<div class="form-group" name="math-tex-title">
+							<div class="col-xs-12 col-sm-3 col-md-3">
+								<div>
 									<label>Include math TeX?...</label><input type="checkbox" class="question" id="math-text" name="math-text" checked/>
 								</div>
 							</div>
 
-							<div class="col-xs-12 col-sm-4 col-md-4">
-								<div class="form-group" name="norm-tex-title">
-									<label>Include normal text?...</label><input type="checkbox" class="question" id="normal-text" name="normal-text" checked/>
+							<div class="col-xs-12 col-sm-3 col-md-3">
+								<div>
+									<label>Include normal text?...</label>
+									<input type="checkbox" class="question" id="normal-text" name="normal-text" checked/>
 								</div>
 							</div>
-							<div class="col-xs-12 col-sm-4 col-md-4">
-								<div class="form-group" name="text-size-title">
+							<div class="col-xs-12 col-sm-3 col-md-3">
+								<div>
 									<label>Text size... </label>
-									<input type='number' name='text-size'  id='text-size' class="form-control input-lg" value="20">
+									<input type='number' name='text-size'  id='text-size' class="form-control input-sm" value="20">
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-3 col-md-3">
+								<div>
+									<label>Side length (px)... </label>
+									<input type='number' name='side-length'  id='side-length' class="form-control input-sm" value="300">
 								</div>
 							</div>
 					</div>
