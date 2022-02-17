@@ -4,7 +4,7 @@
 	<div class="row">
 		<div class="col">
 			<div class="col-xs-6 col-sm-6 col-md-6">
-				<form action="/puzzle" method="POST" role="form">
+				<form action="/puzzle" method="POST" role="form" onsubmit="return validateForm()" name="main-form">
 				<h2>Puzzle maker...</h2>
 					<a href="/" class="link-primary">Back to number of questions...</a>
 					<hr class="colorgraph">
@@ -39,16 +39,16 @@
 					<hr class="colorgraph">
 					<div class="row">
 						<div class="hide-div"><input type='number' name="size"  id="size" value={{size}}></div>
-							<div class="col-xs-12 col-sm-3 col-md-3">
-								<div>
-									<label>Include math TeX?...</label><input type="checkbox" class="question" id="math-text" name="math-text" checked/>
-								</div>
-							</div>
 
 							<div class="col-xs-12 col-sm-3 col-md-3">
 								<div>
 									<label>Include normal text?...</label>
-									<input type="checkbox" class="question" id="normal-text" name="normal-text" checked/>
+									<input type="checkbox" class="question" id="normal-text" name="normal-text"/>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-3 col-md-3">
+								<div>
+									<label>Include math TeX?...</label><input type="checkbox" class="question" id="math-text" name="math-text" checked/>
 								</div>
 							</div>
 							<div class="col-xs-12 col-sm-3 col-md-3">
@@ -67,12 +67,14 @@
 					<hr class="colorgraph">
 					<div class="row">
 					{% for field in fields %}
-					<div class="col-xs-12 col-sm-3 col-md-3">
-						<div class="form-group" name={{field["name"]}}>
-							<label> {{ field["human_label"] }} </label>
-							<input type={{field["type"]}} name={{field["name"]}}  id={{field["name"]}} class="form-control input-lg" tabindex={{loop.index}}>
+						<div class={{field["info-type"]}}>
+							<div class="col-xs-12 col-sm-3 col-md-3">
+								<div class="form-group" name={{field["name"]}}>
+									<label> {{ field["human_label"] }} </label>
+									<input type={{field["type"]}} name={{field["name"]}}  id={{field["name"]}} class="form-control input-lg" tabindex={{loop.index}}>
+								</div>
+							</div>
 						</div>
-					</div>
 					{% endfor %}
 				</div>
 					<hr class="colorgraph">

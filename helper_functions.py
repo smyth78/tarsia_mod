@@ -19,24 +19,28 @@ def generate_fields(num_questions):
         answer_text_name = 'at' + str(i + 1)
         answer_math_name = 'am' + str(i + 1)
         new_question_text = {
+                     "info-type": "normal",
                       "tag": question_text_name,
                       "name": question_text_name,
                       "type": "text",
                       "human_label": question_text_label
                     }
         new_question_math_tex = {
+                    "info-type": "tex",
                       "tag": question_math_name,
                       "name": question_math_name,
                       "type": "text",
                       "human_label": question_math_label
                     }
         new_answer_text = {
+            "info-type": "normal",
           "tag": answer_text_name,
           "name": answer_text_name,
           "type": "text",
           "human_label": answer_text_label
         }
         new_answer_math_tex = {
+            "info-type": "tex",
             "tag": answer_math_name,
             "name": answer_math_name,
             "type": "text",

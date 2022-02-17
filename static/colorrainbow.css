@@ -12,3 +12,7 @@
 .hide-div{
     display: none;
 }
+
+.normal{
+    visibility: hidden;
+}

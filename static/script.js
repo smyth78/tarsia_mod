@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var inputs = document.getElementsByClassName("form-group");
     var mathCheck = document.getElementById('math-text')
     var normCheck = document.getElementById('normal-text')
+
     mathCheck.addEventListener('change', function() {
       if (mathCheck.checked) {
          for(var i = 0; i < inputs.length; i++) {
@@ -53,23 +54,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
     });
+    function validateForm() {
+    console.log(document.forms["main-form"]);
+      let x = document.forms["myForm"]["fname"].value;
+      if (x == "") {
+        alert("Name must be filled out");
+        return false;
+      }
+    }
 
-    // this is to check to see which shaped jigsaw is suitable
-    var question_number = document.getElementById('size').getAttribute('value');
-    var squareCheckDiv = document.getElementById('jigsaw-shape-square-div')
-    var squareCheck = document.getElementById('jigsaw-shape-square')
-    var triCheckDiv = document.getElementById('jigsaw-shape-tri-div')
-    var triCheck = document.getElementById('jigsaw-shape-tri')
-    const squareValues = ['4', '12', '24', '40']
-    const triValues = ['3', '9', '18', '30']
-    if (squareValues.includes(question_number) === true){
-        squareCheckDiv.style.visibility = 'visible';
-        squareCheck.checked = true;
-    };
-    if (triValues.includes(question_number) === true){
-        triCheckDiv.style.visibility = 'visible';
-        triCheck.checked = true;
-    };
+    // // this is to check to see which shaped jigsaw is suitable
+    // var question_number = document.getElementById('size').getAttribute('value');
+    // var squareCheckDiv = document.getElementById('jigsaw-shape-square-div')
+    // var squareCheck = document.getElementById('jigsaw-shape-square')
+    // var triCheckDiv = document.getElementById('jigsaw-shape-tri-div')
+    // var triCheck = document.getElementById('jigsaw-shape-tri')
+    // const squareValues = ['4', '12', '24', '40']
+    // const triValues = ['3', '9', '18', '30']
+    // if (squareValues.includes(question_number) === true){
+    //     squareCheckDiv.style.visibility = 'visible';
+    //     squareCheck.checked = true;
+    // };
+    // if (triValues.includes(question_number) === true){
+    //     triCheckDiv.style.visibility = 'visible';
+    //     triCheck.checked = true;
+    // };
+
 
     // // this code makes the jigsaw sahpe type div hidden when jigsaw NOT sleected
     // var treasureButton = document.getElementById('treasure');
