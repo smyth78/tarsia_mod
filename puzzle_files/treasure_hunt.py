@@ -20,12 +20,16 @@ class TreasureHunt:
             answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_4.png')
         elif self.number_of_clues == 9:
             answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_9.png')
+        elif self.number_of_clues == 8:
+            answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_8.png')
         elif self.number_of_clues == 3:
             answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_3.png')
         elif self.number_of_clues == 18:
             answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_18.png')
         elif self.number_of_clues == 12:
             answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_12.png')
+        elif self.number_of_clues == 21:
+            answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_21.png')
         elif self.number_of_clues == 24:
             answer_template = Image.open('puzzle_files/th_templates/th_hunt_ans_24.png')
         elif self.number_of_clues == 30:

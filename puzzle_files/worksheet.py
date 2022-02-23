@@ -52,15 +52,17 @@ class Worksheet:
             d.text((5, 5), str(question_num) + ')', fill='black', font=self.font)
 
             # useable space in template 150 x 130
-            resized_question = resize_image(question_image)
-            question.paste(resized_question, (20, 20))
-            stamped_question_templates.append(question)
+            if question_image is not None:
+                resized_question = resize_image(question_image)
+                question.paste(resized_question, (20, 20))
+                stamped_question_templates.append(question)
 
             copy_question = question.copy()
-            resized_answer = resize_image(answer_image)
-            resized_answer = add_border_to_image(resized_answer)
-            copy_question.paste(resized_answer, (20, 140))
-            stamped_answer_templates.append(copy_question)
+            if answer_image is not None:
+                resized_answer = resize_image(answer_image)
+                resized_answer = add_border_to_image(resized_answer)
+                copy_question.paste(resized_answer, (20, 140))
+                stamped_answer_templates.append(copy_question)
 
             question_num += 1
 
