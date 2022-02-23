@@ -60,10 +60,14 @@ def calculate_square_puzzle_problem_count(size):
 def calculate_square_size_from_question_total(questions):
     return int((2 * questions + 1)**(1/2) / 2 + 1/2)
 
+def calculate_tri_quest_total_from_size(size):
+    return int(3/2 * size **2 - 3/ 2 * size)
 
 def calculate_tri_size_from_question_total(questions):
     return int(0.5 + (math.sqrt(8 * questions + 3) / (2 * math.sqrt(3))))
 
+# def calculate_tri_size_from_kite_quest_total(questions):
+#     return int(questions -
 
 def calculate_triangle_puzzle_question_count(size):
     return int(4)

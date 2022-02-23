@@ -129,6 +129,67 @@ class AbstractPuzzle:
         return combined_image
 
 
+class KitePuzzle(AbstractPuzzle):
+    def __init__(self, puzzle_size, text_images, side_length):
+        super().__init__(puzzle_size, text_images, side_length)
+        self.is_regular = False
+        self.num_of_questions = int(puzzle_size ** 2 * 2 + puzzle_size)
+        self.triangular_puzzles, self.joining_problems = self.make_two_triangular_puzzles()
+        self.solution_image, self.final_puzzle_image = self.join_images()
+
+    def get_solution_image(self):
+        return self.solution_image
+
+    def get_final_puzzle_image(self):
+        return self.final_puzzle_image
+
+    def join_images(self):
+        # the puzzle size is also the row number - 1
+        tri_puzz_size = self.triangular_puzzles[0].puzzle_size
+        row_num = tri_puzz_size - 1
+        tri_puzz_1 = self.triangular_puzzles[0]
+        tri_puzz_2 = self.triangular_puzzles[1]
+        # first insert the problems on the join...
+        for j, joining_problem in enumerate(self.joining_problems):
+            # only join the even pieces
+            desired_index = 2 * j
+            max_index = 2 * (len(self.joining_problems) - 1)
+            tri_puzz_1.insert_image_on_tri_at_coord_and_posn((row_num, desired_index), 0, joining_problem[0])
+            tri_puzz_2.insert_image_on_tri_at_coord_and_posn((row_num, max_index - desired_index), 0, joining_problem[1])
+
+        # now redraw with joingin images and recreate coords list (not sue why this bit is broken!)
+        tri_puzz_1.recreate_coord_list()
+        tri_puzz_1.redraw_images()
+        tri_puzz_2.recreate_coord_list()
+        tri_puzz_2.redraw_images()
+
+
+        # now join the images
+        puzzle_width, puzzle_height = self.triangular_puzzles[0].get_soln_image().size
+        # need to double height as joining vertically
+        solution_image = Image.new('RGB', (puzzle_width, puzzle_height * 2), (255, 255, 255))
+        final_puzzle_image = Image.new('RGB', (puzzle_width, puzzle_height * 2), (255, 255, 255))
+        tri_puzz_2.rotate_final_image(180)
+        solution_image.paste(tri_puzz_1.get_solution_image(), (0, 0))
+        solution_image.paste(tri_puzz_2.get_solution_image(), (0, puzzle_height))
+        final_puzzle_image.paste(tri_puzz_1.get_final_puzzle_image(), (0, 0))
+        final_puzzle_image.paste(tri_puzz_2.get_final_puzzle_image(), (0, puzzle_height))
+
+        return solution_image, final_puzzle_image
+
+    def get_triangular_puzzles(self):
+        return self.triangular_puzzles
+
+    def make_two_triangular_puzzles(self):
+        num_of_questions_per_triangle = hf.calculate_tri_quest_total_from_size(self.puzzle_size)
+        tri_1_problems = self.text_images[0: num_of_questions_per_triangle]
+        tri_2_problems = self.text_images[num_of_questions_per_triangle: -self.puzzle_size]
+        joining_problems = self.text_images[-self.puzzle_size:]
+        tri_1 = TrianglePuzzle(self.puzzle_size, tri_1_problems, self.side_length)
+        tri_2 = TrianglePuzzle(self.puzzle_size, tri_2_problems, self.side_length)
+        return (tri_1, tri_2), joining_problems
+
+
 class TrianglePuzzle(AbstractPuzzle):
     def __init__(self, puzzle_size, text_images, side_length):
         super().__init__(puzzle_size, text_images, side_length)
@@ -140,8 +201,21 @@ class TrianglePuzzle(AbstractPuzzle):
         self.insert_text_triangles()
         self.solution_image, self.final_puzzle_image = self.construct_puzzle_images()
 
+    def insert_image_on_tri_at_coord_and_posn(self, coord, posn, image):
+        chosen_tri = self.get_piece_by_coord(coord)
+        chosen_tri.rotate_image(180)
+        chosen_tri.insert_text_image(image, posn, self.is_regular)
+        chosen_tri.rotate_image(180)
+
+    def redraw_images(self):
+        self.solution_image, self.final_puzzle_image = self.construct_puzzle_images()
+
     def get_soln_image(self):
         return self.solution_image
+
+    def rotate_final_image(self, angle):
+        self.solution_image = self.solution_image.rotate(angle)
+        self.final_puzzle_image = self.final_puzzle_image.rotate(angle)
 
     def get_puzzle_image(self):
         return self.final_puzzle_image
@@ -180,6 +254,9 @@ class TrianglePuzzle(AbstractPuzzle):
                     puzzle_image.paste(tri_puzzle_image, (int(j_puzz * self.side_length / 2) + (self.puzzle_size - i_puzz - 1) * self.side_length // 2, i_puzz * row_height), tri_puzzle_image)
 
         return solution_image, puzzle_image
+
+    def recreate_coord_list(self):
+        _, self.triangle_coords_list = self.create_puzzle_pieces()
 
     def insert_text_triangles(self):
         question_counter = 0

@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request
 import math
 
 import helper_functions as hf
-from puzzle_files.jigsaw_puzzle import ParseImages, SquarePuzzle, TrianglePuzzle
+from puzzle_files.jigsaw_puzzle import ParseImages, SquarePuzzle, TrianglePuzzle, KitePuzzle
 from puzzle_files.treasure_hunt import TreasureHunt
 from puzzle_files.worksheet import Worksheet
 
@@ -47,13 +47,18 @@ def final_puzzle():
         if total_questions in [4, 12, 24, 40]:
             square_puzzle_size = hf.calculate_square_size_from_question_total(total_questions)
             puzzle = SquarePuzzle(square_puzzle_size, parsed_problems, side_length)
-            combined_image = puzzle.combine_puz_and_soln_images('Solution', 'Puzzle')
         elif total_questions in [3, 9, 18, 30]:
             tri_puzzle_size = hf.calculate_tri_size_from_question_total(total_questions)
             puzzle = TrianglePuzzle(tri_puzzle_size, parsed_problems, side_length)
-            combined_image = puzzle.combine_puz_and_soln_images('Solution', 'Puzzle')
+        elif total_questions in [8, 21]:
+            # this is for a kite puzze
+            # single_tri_puzzle_size = hf.calculate_tri_size_from_kite_quest_total(total_questions)
+            #HACK - need to rethink this? maybe not...need to write inverse function
+            single_tri_puzzle_size = 2 if total_questions == 8 else 3
+            puzzle = KitePuzzle(single_tri_puzzle_size, parsed_problems, side_length)
         else:
-            combined_image = None
+            puzzle = None
+        combined_image = puzzle.combine_puz_and_soln_images('Solution', 'Puzzle')
         return hf.serve_pil_image(combined_image)
 
     elif form_as_dict['options-puzzle'] == 'treasure':
