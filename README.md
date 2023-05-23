@@ -2,6 +2,9 @@
 
 This is a Dash application that provides a Tarsia style puzzle jigsaw maker and a treasure hunt maker. The user can enter questions and answers using Latex and the mod will produce a puzzle and a solution that can be printed out and used in the classroom.
 
+The app can be found live on this link https://math-puzzler.herokuapp.com/
+
+
 ## Installation
 
 1. Clone the repository:
