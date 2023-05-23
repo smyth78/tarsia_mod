@@ -11,20 +11,20 @@ This is a Dash application that provides a Tarsia style puzzle jigsaw maker and 
 
 2. Navigate to the project directory:
 
-    cd tarsia_mod
+        cd tarsia_mod
 
 
 3. Install the required dependencies:
 
 
-   pip install -r requirements.txt
+        pip install -r requirements.txt
 
 ## Usage
 
 To run the  app, execute the following command:
 
 
-python run.py
+        python run.py
 
 Open your web browser and visit `http://localhost:8050` to view the application.
 
